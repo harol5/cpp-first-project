@@ -1,0 +1,27 @@
+# Ignore CLion-specific files and folders
+.idea/
+cmake-build-*/
+
+# Ignore CMake artifacts
+CMakeCache.txt
+CMakeFiles/
+Makefile
+Testing/
+*.cmake
+*.tmp
+
+# Ignore compiler and build artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.out
+*.exe
+*.log
+
+# Ignore OS-specific files (e.g., macOS)
+.DS_Store
+
+# Backup files
+*.bak
