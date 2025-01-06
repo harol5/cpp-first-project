@@ -202,6 +202,12 @@ class Person {
         }
 };
 
+// argument passed by value (copy).
+void displayAccountInfo (Account account) {
+    cout << "name is: " << account.getName() << endl;
+    cout << "balance is: " << account.getBalance() << endl;
+}
+
 void practicingClasses () {
     Person p1 {"harol", 30}; // was this created on the stack or heap? -> on the stack
     p1.printInfo();
@@ -223,6 +229,10 @@ void practicingClasses () {
 
     Account newAccount;
     cout << "new account name is: " << newAccount.getName() << " and balance is: " << newAccount.getBalance() << endl;
+
+    // here we are testing how c++ makes copies of object by calling the copy constructor.
+    displayAccountInfo(p1Accounts); // when passing arg to a func.
+    Account p1AccountsCopy {p1Accounts}; // when creating a new object;
 }
 
 int main() {

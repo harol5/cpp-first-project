@@ -2,6 +2,8 @@
 // Created by harol rojas on 1/5/25.
 //
 
+#include <iostream>
+#include <ostream>
 #include <string>
 using namespace std;
 
@@ -25,7 +27,13 @@ private:
     double balance;
 
 public:
+    // default values constructor.
     Account(std::string nameVal = "default", double balanceVal = 0);
+    // Copy constructor.
+    Account(const Account &source);
+    // Destructor.
+    ~Account();
+
     double getBalance();
     void deposit(double amount);
     void setName(string name);
