@@ -20,7 +20,7 @@
 using namespace std;
 
 
-/*
+/* ==========================================
  * c++ feature only: namespaces, cout,cin and "<<" , ">>" operators.
  */
 void ioTools() {
@@ -57,7 +57,7 @@ void arrays() {
     }
 }
 
-/*
+/* ==========================================
  * c++ feature only: vectors (like ArrayList in java).
  */
 void vectorPractice () {
@@ -79,7 +79,7 @@ void vectorPractice () {
     vector<vector<int>> matrix (3, vector<int> (3));
 }
 
-/*
+/* ==========================================
  * c++ feature only: strings like most programmin languages.
  *
  * CONST
@@ -112,7 +112,7 @@ void stringPractice () {
     cout << "mem addr name: " << &name << endl;
 }
 
-/*
+/* ==========================================
  * c++ feature only: 2 new ways to declare variables.
  */
 void variableDeclarations () {
@@ -129,7 +129,7 @@ unsigned long long int factorial (unsigned long long int n) {
     }
 }
 
-/*
+/* ==========================================
  * c++ feature only: new way to allocate and free memory.
  *
  * CONST
@@ -167,16 +167,38 @@ void pointersAndMemAllocation () {
     /*p_const_score = &lowScore;*/ // error.
 }
 
-/*
+/* ==========================================
  * c++ feature only: references variable with "&".
  */
-void aliases () {
+void rValueReferences () {
     int a {1};
     int &r_a {a}; // alias. not present in C
     int *p_a {&a};
 }
 
-/*
+/* ==========================================
+ * c++ feature only: rvalues and lvalues.
+ */
+void rvaluesAndLvalues () {
+    // a is an lvalue (locator value) because it is addressable.
+    int a{};
+    // 23 is a rvalue (right value) because it can not be addressed, persisted or assigned.
+    a = 23;
+
+    // lvalue references(&) can only be used with lvalues;
+    int &r_a {a};
+    /*int &r_b {45};*/ // ERROR!!
+
+    // you can use rvalue references(&&) if you want to make a reference to a rvalue ONLY!!.
+    int &&r_rvalue {23};
+    /*int &&r_rvalue_2 {a};*/ // ERROR!!
+
+    int &r_rvalue_ref {r_rvalue};
+
+
+}
+
+/* ==========================================
  * c++ feature only: OOP Classes.
  */
 class Person {
@@ -188,11 +210,13 @@ class Person {
         Person(): name ("default"), age (0) {};
         Person(string name, int age): name (name), age (age) {};
 
-        int getAge () {
+        // const correctness. see AI chat "returning conts references from object methods" for more info.
+        int getAge () const {
             return this->age;
         }
 
-        string getName () {
+        // const correctness. see AI chat "returning conts references from object methods" for more info.
+        const string &getName () const {
             return this->name;
         }
 
@@ -202,8 +226,14 @@ class Person {
         }
 };
 
+// testing the static member "count" of the Account class.
+void displayActiveAccounts () {
+    cout << "active accounts: " << Account::getCount() << endl;
+}
+
 // argument passed by value (copy).
 void displayAccountInfo (Account account) {
+    displayActiveAccounts();
     cout << "name is: " << account.getName() << endl;
     cout << "balance is: " << account.getBalance() << endl;
 }
@@ -230,12 +260,19 @@ void practicingClasses () {
     Account newAccount;
     cout << "new account name is: " << newAccount.getName() << " and balance is: " << newAccount.getBalance() << endl;
 
+    // testing the static member "count" of the Account class.
+    displayActiveAccounts();
+
     // here we are testing how c++ makes copies of object by calling the copy constructor.
     displayAccountInfo(p1Accounts); // when passing arg to a func.
     Account p1AccountsCopy {p1Accounts}; // when creating a new object;
+
+    // testing the static member "count" of the Account class.
+    displayActiveAccounts();
 }
 
 int main() {
     practicingClasses();
+    displayActiveAccounts();
     return 0;
 }

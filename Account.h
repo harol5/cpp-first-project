@@ -23,14 +23,16 @@ using namespace std;
 
 class Account {
 private:
+    static int count; // this belongs to the class, not objects. and will be initialized on the cpp file.
     string name;
     double balance;
-
 public:
     // default values constructor.
     Account(std::string nameVal = "default", double balanceVal = 0);
     // Copy constructor.
     Account(const Account &source);
+    // Move constructor. -> move resources on the heap. more efficient.
+    Account(Account &&source) noexcept;
     // Destructor.
     ~Account();
 
@@ -38,6 +40,8 @@ public:
     void deposit(double amount);
     void setName(string name);
     std::string getName();
+
+    static int getCount(); // because this method is static, it only has access to static members.
 };
 
 #endif //ACCOUNT_H
