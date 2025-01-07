@@ -36,10 +36,12 @@ public:
     // Destructor.
     ~Account();
 
-    double getBalance();
+    [[nodiscard]] double getBalance() const;
     void deposit(double amount);
     void setName(string name);
-    std::string getName();
+
+    // CONST CORRECTNESS
+    [[nodiscard]] const std::string &getName() const;
 
     static int getCount(); // because this method is static, it only has access to static members.
 };

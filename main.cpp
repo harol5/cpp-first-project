@@ -231,12 +231,44 @@ void displayActiveAccounts () {
     cout << "active accounts: " << Account::getCount() << endl;
 }
 
-// argument passed by value (copy).
-void displayAccountInfo (Account account) {
+// argument passed by Lvalue const reference (read only)
+void displayAccountInfo (const Account &account) {
+    cout << "--- displayAccountInfo function called: by const Lvalue reference. (read) no constructors called ---" << endl;
     displayActiveAccounts();
+
+    // CONST CORRECTNESS -> because on the scope of this function the account variable is constant.
+    // any method belonging to the class must have the "const" keyword before the curly braces
+    // to indicate to the compiler that this method, DOES NOT CHANGE the internal state of the object.
     cout << "name is: " << account.getName() << endl;
-    cout << "balance is: " << account.getBalance() << endl;
 }
+
+
+// argument passed by Lvalue reference (modify)
+void changeBalanceAccount (Account &account) {
+    cout << "--- changeBalanceAccount function called: by Lvalue reference. (modify) no constructors called ---" << endl;
+    displayActiveAccounts();
+    account.deposit(account.getBalance() + 2000);
+}
+
+// argument pass by value (copy)
+void estimateBalanceAccount (Account account) {
+    cout << "--- estimateBalanceAccount function called: value. (copy) copy constructors called ---" << endl;
+    displayActiveAccounts();
+    constexpr int ownedFees = 200;
+    account.deposit(account.getBalance() - ownedFees);
+    cout << "balance is after paying fees: " <<  account.getBalance()  << endl;
+}
+
+
+// argument passed by Rvalue reference.
+void saveAccountOnTheFly (Account &&account) {
+    cout << "--- saveAccountOnTheFly function called: by Rvalue reference. move constructors called ---" << endl;
+    displayActiveAccounts();
+    const Account movedAccount = std::move(account); // without this, the move constructor is not called
+    displayActiveAccounts();
+    cout << "name is: " << movedAccount.getName() << endl;
+}
+
 
 void practicingClasses () {
     Person p1 {"harol", 30}; // was this created on the stack or heap? -> on the stack
@@ -263,9 +295,23 @@ void practicingClasses () {
     // testing the static member "count" of the Account class.
     displayActiveAccounts();
 
-    // here we are testing how c++ makes copies of object by calling the copy constructor.
-    displayAccountInfo(p1Accounts); // when passing arg to a func.
-    Account p1AccountsCopy {p1Accounts}; // when creating a new object;
+    // -- this function takes Rvalue and Lvalues;
+    displayAccountInfo(p1Accounts); // Lvalue
+    Account &r_p1Accounts = p1Accounts;
+    displayAccountInfo(r_p1Accounts); // Lvalue reference
+    // Rvalue because even thought the param is a Lvalue reference, it has the const keyword which does not allow to modify the object.
+    displayAccountInfo(Account{"Rvalue to Lvalue const reference param",999.99});
+
+    // -- this function takes Rvalues as arguments only.
+    saveAccountOnTheFly(Account{"Rvalue to Rvalue reference param",888.88});
+
+    // -- this function takes Lvalues only;
+    changeBalanceAccount(newAccount);
+    displayAccountInfo(newAccount);
+
+    // -- here we are testing how c++ makes copies of object by calling the copy constructor.
+    estimateBalanceAccount(newAccount);
+    Account p1AccountsCopy {p1Accounts};
 
     // testing the static member "count" of the Account class.
     displayActiveAccounts();

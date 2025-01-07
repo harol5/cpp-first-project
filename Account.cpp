@@ -17,6 +17,7 @@ int Account::getCount() {
 // initialization list.
 Account::Account(std::string nameVal, double balanceVal)
   : name(nameVal), balance(balanceVal) {
+  std::cout << "default constructor called for: " << nameVal << std::endl;
   ++count; // updating static member count everytime a new object is created.
 }
 
@@ -26,14 +27,25 @@ Account::Account(const Account &source) : name(source.name), balance(source.bala
   ++count; // updating static member count everytime a new object is copied.
 }
 
+Account::Account(Account &&source) noexcept {
+  std::cout << "Move constructor called for: " << source.name << std::endl;
+  name = std::move(source.name);
+  balance = std::move(source.balance);
+  ++count; // updating static member count everytime a new object is moved.
+}
+
 // Destructor implementation.
 Account::~Account() {
   --count; // updating static member count everytime a new object is destroyed.
   std::cout << "Account destructor called." << std::endl;
 };
 
+// CONST CORRECTNESS
+const std::string &Account::getName() const {
+  return name;
+}
 
-double Account::getBalance() {
+double Account::getBalance() const {
   return balance;
 }
 
@@ -45,9 +57,7 @@ void Account::setName(std::string n) {
   name = n;
 }
 
-std::string Account::getName() {
-  return name;
-}
+
 
 
 
