@@ -11,6 +11,7 @@
 /*#include <cassert>*/
 
 #include "Account.h"
+#include "Deep.h"
 
 /*
  * throughout this file, we'll see the namespace "std" use a lot.
@@ -228,47 +229,58 @@ class Person {
 
 // testing the static member "count" of the Account class.
 void displayActiveAccounts () {
-    cout << "active accounts: " << Account::getCount() << endl;
+    cout << "--- displayActiveAccounts called!!: active accounts: " << Account::getCount() << endl;
 }
 
-// argument passed by Lvalue const reference (read only)
+/*
+ * this function takes Rvalue and Lvalues;
+ * argument passed by Lvalue const reference (read only)
+ */
 void displayAccountInfo (const Account &account) {
-    cout << "--- displayAccountInfo function called: by const Lvalue reference. (read) no constructors called ---" << endl;
+    cout << "--- ----------------- displayAccountInfo function called: by const Lvalue reference. (read) no constructors called ===" << endl;
     displayActiveAccounts();
 
     // CONST CORRECTNESS -> because on the scope of this function the account variable is constant.
     // any method belonging to the class must have the "const" keyword before the curly braces
     // to indicate to the compiler that this method, DOES NOT CHANGE the internal state of the object.
-    cout << "name is: " << account.getName() << endl;
+    cout << "account name is: " << account.getName() << endl;
+    cout << "account balance is: " << account.getBalance() << endl;
+    cout << "--- ----------------- done ---------------------------- ---" << endl;
 }
-
 
 // argument passed by Lvalue reference (modify)
 void changeBalanceAccount (Account &account) {
-    cout << "--- changeBalanceAccount function called: by Lvalue reference. (modify) no constructors called ---" << endl;
+    cout << "--- ----------------- changeBalanceAccount function called: by Lvalue reference. (modify) no constructors called ===" << endl;
+    cout << "account name is: " << account.getName() << endl;
+    cout << "account balance is: " << account.getBalance() << endl;
     displayActiveAccounts();
     account.deposit(account.getBalance() + 2000);
+    cout << "--- ----------------- done ---------------------------- ---" << endl;
 }
 
 // argument pass by value (copy)
 void estimateBalanceAccount (Account account) {
-    cout << "--- estimateBalanceAccount function called: value. (copy) copy constructors called ---" << endl;
+    cout << "--- ----------------- estimateBalanceAccount function called: value. (copy) copy constructors called ===" << endl;
+    cout << "account name is: " << account.getName() << endl;
+    cout << "account balance is: " << account.getBalance() << endl;
     displayActiveAccounts();
-    constexpr int ownedFees = 200;
+    double ownedFees = 200.56;
     account.deposit(account.getBalance() - ownedFees);
     cout << "balance is after paying fees: " <<  account.getBalance()  << endl;
+    cout << "--- ----------------- done ---------------------------- ---" << endl;
 }
-
 
 // argument passed by Rvalue reference.
 void saveAccountOnTheFly (Account &&account) {
-    cout << "--- saveAccountOnTheFly function called: by Rvalue reference. move constructors called ---" << endl;
+    cout << "--- ----------------- saveAccountOnTheFly function called: by Rvalue reference. move constructors called ===" << endl;
+    cout << "account name is: " << account.getName() << endl;
+    cout << "account balance is: " << account.getBalance() << endl;
     displayActiveAccounts();
     const Account movedAccount = std::move(account); // without this, the move constructor is not called
     displayActiveAccounts();
     cout << "name is: " << movedAccount.getName() << endl;
+    cout << "--- ----------------- done ---------------------------- ---" << endl;
 }
-
 
 void practicingClasses () {
     Person p1 {"harol", 30}; // was this created on the stack or heap? -> on the stack
@@ -276,49 +288,104 @@ void practicingClasses () {
 
     Person *p2 = new Person {"juan", 30}; // heap allocation
     p2->printInfo(); // arrow operator. use when dealing with pointers.
-    delete p2;
 
     Person *p3 = new Person {"gloria", 30};
     (*p3).printInfo(); // dereferencing, then accessing member with dot operator.
-    delete p3;
 
     Person *p4 = new Person ("maria", 30);
     (*p4).printInfo();
-    delete p4;
 
-    Account p1Accounts {"harol",100.67};
-    cout << "harol balance is: " << p1Accounts.getBalance() << endl;
+    Account p1Accounts {(p1.getName().data()),100.67};
+    displayAccountInfo(p1Accounts); // Lvalue (locator value)
+    Account &r_p1Accounts = p1Accounts; // Lvalue reference
+    displayAccountInfo(r_p1Accounts);
 
-    Account newAccount;
-    cout << "new account name is: " << newAccount.getName() << " and balance is: " << newAccount.getBalance() << endl;
+    Account p2Accounts { (p2->getName().data()),200.67};
+    displayAccountInfo(p2Accounts); // Lvalue (locator value)
 
-    // testing the static member "count" of the Account class.
+    Account newAccount; // initialize with default values.
+    displayAccountInfo(newAccount); // Lvalue (locator value)
+
+    // -- testing the static member "count" of the Account class.
     displayActiveAccounts();
 
-    // -- this function takes Rvalue and Lvalues;
-    displayAccountInfo(p1Accounts); // Lvalue
-    Account &r_p1Accounts = p1Accounts;
-    displayAccountInfo(r_p1Accounts); // Lvalue reference
     // Rvalue because even thought the param is a Lvalue reference, it has the const keyword which does not allow to modify the object.
     displayAccountInfo(Account{"Rvalue to Lvalue const reference param",999.99});
 
     // -- this function takes Rvalues as arguments only.
     saveAccountOnTheFly(Account{"Rvalue to Rvalue reference param",888.88});
+    /*saveAccountOnTheFly(p2Accounts);*/ // ERROR!! because p2Accounts is a Lvalue.
+    saveAccountOnTheFly(std::move(p2Accounts)); // I used the std::move so the Lvalue is cast to a Rvalue.
 
     // -- this function takes Lvalues only;
     changeBalanceAccount(newAccount);
-    displayAccountInfo(newAccount);
+    displayAccountInfo(newAccount); //checking that the original object was actually updated.
 
     // -- here we are testing how c++ makes copies of object by calling the copy constructor.
     estimateBalanceAccount(newAccount);
-    Account p1AccountsCopy {p1Accounts};
+    Account p1AccountsCopy {p1Accounts}; // new - prefer!!
+    Account p1AccountsCopy2 (p1Accounts); // new
+    Account newAccountsCopy = newAccount; // old. here Im not assigning, I'm initializing.
 
     // testing the static member "count" of the Account class.
     displayActiveAccounts();
+
+    // cleaning
+    delete p2;
+    delete p3;
+    delete p4;
+}
+
+/* ==========================================
+ * c++ feature only: operator overloading.
+ *
+ * --- Copy and move assignment operators overload.
+ * - difference between initializing and assigning.
+ */
+void assignmentOperator () {
+    // ------- COPY ASSIGNMENT----------
+    cout << "--- ----------------- copy assignment operator test ---------------" << endl;
+    Account account1 {"name1", 100.0}; // initializing.
+    displayAccountInfo(account1);
+
+    Account account2 = account1; // initializing as well (NOT ASSIGNING).
+    Account account3; // initializing (with default values).
+    displayAccountInfo(account3);
+
+    /*
+    *  this will call the copy assignment operator (`operator=` const Lvalue reference). if not implemented, compiler will provide one.
+    *  this class does not need a custom one because it does not manage any unique resource that must be tranfer
+    *  or don't have any raw pointer members.
+     */
+    account3 = account1; // COPY assigning!!!! because the right hand side is a Lvalue.
+    displayAccountInfo(account3);
+
+    Deep deep1 {10};
+    Deep deep2 {20};
+
+    // calling custom copy assignment operator because this class has a raw pointer member.
+    deep1 = deep2; // COPY assigning!!!! because the right hand side is a Lvalue.
+    cout << "deep1 data is: " << deep1.getData() << endl;
+
+    // ------- MOVE ASSIGNMENT----------
+    cout << "--- ----------------- move assignment operator test ---------------" << endl;
+    // initializing. copy no require to account4, elision of constructors (RVO).
+    Account account4 = Account {"name4", 100.0};
+    displayAccountInfo(account4);
+
+    /*
+    *  this will call the move assignment operator (`operator=` Rvalue reference). if not implemented, compiler will provide one.
+    *  this class does not need a custom one because it does not manage any unique resource that must be transfer
+    *  or don't have any raw pointer members.
+     */
+    account4 = Account {"name5", 100.0};// MOVE assigning!!!! because the right hand side is a Rvalue.
 }
 
 int main() {
-    practicingClasses();
-    displayActiveAccounts();
+    Account account1 {"name1", 100.0};
+    Account account2 = {"name2", 200.0};
+    Account account3 = Account {"name3", 300.0};
+    Account account4 ("account4", 400.0);
+    Account account5 =  Account("account5", 500.0);
     return 0;
 }

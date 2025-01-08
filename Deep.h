@@ -30,6 +30,11 @@ public:
     // getters and setters.
     int getData();
     void setData(int val);
+
+    // COPY ASSIGNMENT OPERATOR OVERLOAD
+    Deep &operator=(const Deep &source);
+    // MOVE ASSIGNMENT OPERATOR OVERLOAD
+    Deep &operator=(Deep &&source) noexcept;
 };
 
 

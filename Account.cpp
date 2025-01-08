@@ -15,8 +15,8 @@ int Account::getCount() {
 }
 
 // initialization list.
-Account::Account(std::string nameVal, double balanceVal)
-  : name(nameVal), balance(balanceVal) {
+Account::Account(std::string &&nameVal, double balanceVal)
+  : name(std::move(nameVal)), balance(balanceVal) {
   std::cout << "default constructor called for: " << nameVal << std::endl;
   ++count; // updating static member count everytime a new object is created.
 }
@@ -55,6 +55,25 @@ void Account::deposit(double amount) {
 
 void Account::setName(std::string n) {
   name = n;
+}
+
+// COPY ASSIGNMENT OPERATOR OVERLOAD
+Account &Account::operator=(const Account &source) {
+  std::cout << "Copy assignment operator called for: " << source.name << std::endl;
+  if (this == &source) {
+    return *this;
+  }
+
+  name = source.name;
+  balance = source.balance;
+  return *this;
+}
+
+// MOVE ASSIGNMENT OPERATOR OVERLOAD
+Account &Account::operator=(Account &&source) noexcept {
+  std::cout << "Move assignment operator called for: " << source.name << std::endl;
+  name = std::move(source.name);
+  balance = std::move(source.balance);
 }
 
 

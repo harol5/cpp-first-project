@@ -4,6 +4,9 @@
 
 #include "Deep.h"
 
+#include <iostream>
+#include <ostream>
+
 // Constructor implementation.
 Deep::Deep(int val) {
     data = new int;
@@ -36,7 +39,7 @@ Deep::Deep(const Deep &source) {
 Deep::Deep(Deep &&source) noexcept {
     // copies the pointer to the obj that is moving to.
     data = source.data;
-    // then, we invalidate the old object's pointer.
+    // then, we reset the old object's pointer.
     source.data = nullptr;
 }
 
@@ -53,6 +56,33 @@ void Deep::setData(int val) {
 // getter
 int Deep::getData() {
     return *data;
+}
+
+// copy assignment operator overload
+Deep &Deep::operator=(const Deep &source) {
+    std::cout << "Copy assignment operator called for." << *source.data << std::endl;
+    // if the source is the same as the current object, we don't need to do anything.
+    if (this == &source) {
+        return *this;
+    }
+    // otherwise, we need to delete the old data and copy the new one.
+    delete this->data;
+    this->data = new int;
+    *this->data = *source.data;
+    return *this;
+}
+
+// move assignment operator overload
+Deep &Deep::operator=(Deep &&source) noexcept {
+    // if the source is the same as the current object, we don't need to do anything.
+    if (this == &source) {
+        return *this;
+    }
+    // otherwise, we need to delete the old data and copy the new one.
+    delete this->data;
+    this->data = source.data;
+    source.data = nullptr;
+    return *this;
 }
 
 
