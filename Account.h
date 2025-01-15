@@ -27,7 +27,12 @@ private:
     double balance;
 public:
     // default values constructor.
-    Account(std::string &&nameVal = "default", double balanceVal = 0);
+    /*
+     * Constructor Initialization list.
+     * for best practices when passing value to constructors see AI chat "C++ Initialization Syntax Explained in Detail"
+     * "pass-by-value and move" idiom
+     */
+    Account(std::string nameVal = "default", double balanceVal = 0);
     // Copy constructor.
     Account(const Account &source);
     // Move constructor. -> move resources on the heap. more efficient.

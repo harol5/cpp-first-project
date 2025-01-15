@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #include <vector>
 #include <string>
 /*#include <algorithm>*/
@@ -114,7 +115,9 @@ void stringPractice () {
 }
 
 /* ==========================================
- * c++ feature only: 2 new ways to declare variables.
+ * c++ feature only: new ways to declare variables.
+ *
+ * see AI chat "C++ Initialization Syntax Explained in Detail"
  */
 void variableDeclarations () {
     int a {45}; // preferred!!
@@ -195,8 +198,6 @@ void rvaluesAndLvalues () {
     /*int &&r_rvalue_2 {a};*/ // ERROR!!
 
     int &r_rvalue_ref {r_rvalue};
-
-
 }
 
 /* ==========================================
@@ -207,9 +208,13 @@ class Person {
         string name;
         int age;
     public:
-        // Constructor Initialization list.
+        /*
+         * Constructor Initialization list.
+         * for best practices when passing value to constructors see AI chat "C++ Initialization Syntax Explained in Detail"
+         * "pass-by-value and move" idiom
+         */
         Person(): name ("default"), age (0) {};
-        Person(string name, int age): name (name), age (age) {};
+        Person(string name, const int age): name (std::move(name)), age (age) {};
 
         // const correctness. see AI chat "returning conts references from object methods" for more info.
         int getAge () const {
@@ -276,7 +281,21 @@ void saveAccountOnTheFly (Account &&account) {
     cout << "account name is: " << account.getName() << endl;
     cout << "account balance is: " << account.getBalance() << endl;
     displayActiveAccounts();
+
+    /*
+     * IMPORTANT OBSERVATION!!
+     *
+     * the "account" parameter is a Rvalue reference type, meaning it points to a Rvalue, so you might think
+     * I can just initialize a variable with it and the move constructor will be called because it is a Rvalue reference
+     * BUT NO!!!! the "account" variable itself is a Lvalue, because it has a name. so if we do not use std::move,
+     * it will call the copy constructor instead.
+     *
+     * e.g. const Account copyAccount = account; -> copy constructor is called.
+     *
+     * so we need to cast the Lvalue to an actual Rvalue so the move constructor can actually be used.
+     */
     const Account movedAccount = std::move(account); // without this, the move constructor is not called
+
     displayActiveAccounts();
     cout << "name is: " << movedAccount.getName() << endl;
     cout << "--- ----------------- done ---------------------------- ---" << endl;
@@ -381,11 +400,41 @@ void assignmentOperator () {
     account4 = Account {"name5", 100.0};// MOVE assigning!!!! because the right hand side is a Rvalue.
 }
 
-int main() {
+/* ==========================================
+ * c++ feature only: new ways to declare variables (Classes).
+ *
+ * see AI chat "C++ Initialization Syntax Explained in Detail"
+ */
+void differentWaysOfInitialization() {
     Account account1 {"name1", 100.0};
     Account account2 = {"name2", 200.0};
     Account account3 = Account {"name3", 300.0};
     Account account4 ("account4", 400.0);
     Account account5 =  Account("account5", 500.0);
+}
+
+void understandingSTDMoveSemantics() {
+    /*
+     * see AI chat "Understanding References and std::move in C++" for more info.
+     */
+
+    Account account1 {"name1", 100.0};
+    saveAccountOnTheFly(std::move(account1));
+
+    Account account2 = {"name2", 200.0};
+
+    // will these 2 reference variables (Lvalue and Rvalue) point to the same memory address account2 is using? -> YES!! so what is the actual difference?
+    Account &lValueRef_account2 = account2;
+    Account &&rValueRef_account2 = std::move(account2);
+
+    cout << "account2 memory addres is: " << &account2 << endl;
+    cout << "lValueRef_account2 memory addres is: " << &lValueRef_account2 << endl;
+    cout << "rValueRef_account2 memory addres is: " << &rValueRef_account2 << endl;
+}
+
+int main() {
+
+
+
     return 0;
 }

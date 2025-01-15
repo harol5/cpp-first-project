@@ -14,8 +14,12 @@ int Account::getCount() {
   return count;
 }
 
-// initialization list.
-Account::Account(std::string &&nameVal, double balanceVal)
+/*
+ * Constructor Initialization list.
+ * for best practices when passing value to constructors see AI chat "C++ Initialization Syntax Explained in Detail".
+*  "pass-by-value and move" idiom
+ */
+Account::Account(std::string nameVal, double balanceVal)
   : name(std::move(nameVal)), balance(balanceVal) {
   std::cout << "default constructor called for: " << nameVal << std::endl;
   ++count; // updating static member count everytime a new object is created.
