@@ -18,6 +18,9 @@ public:
     // copy
     CheckingAccount(const CheckingAccount &source);
 
+    // move
+    CheckingAccount(CheckingAccount &&source) noexcept;
+
     //destructor
     ~CheckingAccount();
 

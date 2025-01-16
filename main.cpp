@@ -424,7 +424,16 @@ void understandingSTDMoveSemantics() {
     cout << "rValueRef_account2 memory addres is: " << &rValueRef_account2 << endl;
 }
 
-int main() {
+/* ==========================================
+ * c++ feature only: Inheritance.
+ *
+ * Understanding how default, copy and move constructors are executed when
+ * dealing with inheritance.
+ *
+ * see class CheckingAccount for more details.
+ *
+ */
+void practicingInheritance () {
     /*CheckingAccount a1 {"john",4678.46,347656783,12345678901234};*/
     CheckingAccount a1;
     displayActiveAccounts();
@@ -443,5 +452,22 @@ int main() {
     cout << "a1 balance is: " << a1.getBalance() << endl;
     cout << "a1 name is: " << a1.getName() << endl;
 
+    cout << "--- ----------------- Moving ---------------------------- ---" << endl;
+
+    CheckingAccount a2 = std::move(a1);
+
+    cout << "a2 account number is: " << a2.getAccountNumber() << endl;
+    cout << "a2 routing number is: " << a2.getRoutingNumber() << endl;
+    cout << "a2 balance is: " << a2.getBalance() << endl;
+    cout << "a2 name is: " << a2.getName() << endl;
+
+    cout << "a1 account number is: " << a1.getAccountNumber() << endl;
+    cout << "a1 routing number is: " << a1.getRoutingNumber() << endl;
+    cout << "a1 balance is: " << a1.getBalance() << endl;
+    cout << "a1 name is: " << a1.getName() << endl;
+
+}
+
+int main() {
     return 0;
 }

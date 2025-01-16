@@ -37,6 +37,8 @@ Account::Account(Account &&source) noexcept {
   std::cout << "Account Move constructor called for: " << source.name << std::endl;
   name = std::move(source.name);
   balance = source.balance;
+
+  source.balance = 0;
   ++count; // updating static member count everytime a new object is moved.
 }
 

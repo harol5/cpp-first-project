@@ -12,8 +12,18 @@ CheckingAccount::CheckingAccount(std::string nameVal, const double balanceVal ,c
 }
 
 CheckingAccount::CheckingAccount(const CheckingAccount &source)
-: Account {source}, routingNumber{source.routingNumber}, accountNumber{source.accountNumber} {
+    : Account {source}, routingNumber{source.routingNumber}, accountNumber{source.accountNumber} {
     std::cout << "CheckingAccount default constructor called!!" << std::endl;
+}
+
+CheckingAccount::CheckingAccount(CheckingAccount &&source) noexcept
+    : Account {std::move(source)}{
+    std::cout << "CheckingAccount Move constructor called!!" << std::endl;
+    routingNumber = source.routingNumber;
+    accountNumber = source.accountNumber;
+
+    source.routingNumber = 0;
+    source.accountNumber = 0;
 }
 
 CheckingAccount::~CheckingAccount() {
