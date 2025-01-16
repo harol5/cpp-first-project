@@ -5,18 +5,30 @@
 #ifndef CHECKINGACCOUNT_H
 #define CHECKINGACCOUNT_H
 
-#include <string>
+#include "Account.h"
 
-class CheckingAccount {
+class CheckingAccount: public Account {
 private:
-    std::string name;
-    double balance;
+    int routingNumber;
+    long accountNumber;
 
 public:
-    double getBalance();
+    explicit CheckingAccount(std::string nameVal = "default", double balanceVal = 0, int routingNumber = 0, long accountNumber = 0);
+
+    // copy
+    CheckingAccount(const CheckingAccount &source);
+
+    //destructor
+    ~CheckingAccount();
+
+    void setRoutingNumber(int r);
+    void setAccountNumber(long a);
+    [[nodiscard]] int getRoutingNumber() const;
+    [[nodiscard]] long getAccountNumber() const;
+    /*double getBalance();
     void deposit(double amount);
     void setName(std::string n);
-    std::string getName();
+    std::string getName();*/
 };
 
 

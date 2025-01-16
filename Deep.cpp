@@ -63,6 +63,7 @@ Deep &Deep::operator=(const Deep &source) {
     std::cout << "Copy assignment operator called for." << *source.data << std::endl;
     // if the source is the same as the current object, we don't need to do anything.
     if (this == &source) {
+        std::cout << "same object" << std::endl;
         return *this;
     }
     // otherwise, we need to delete the old data and copy the new one.

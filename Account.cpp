@@ -8,6 +8,8 @@
 
 #include "Account.h"
 
+#include <utility>
+
 // initializing static member.
 int Account::count = 0;
 int Account::getCount() {
@@ -19,22 +21,22 @@ int Account::getCount() {
  * for best practices when passing value to constructors see AI chat "C++ Initialization Syntax Explained in Detail".
 *  "pass-by-value and move" idiom
  */
-Account::Account(std::string nameVal, double balanceVal)
+Account::Account(std::string nameVal, const double balanceVal)
   : name(std::move(nameVal)), balance(balanceVal) {
-  std::cout << "default constructor called for: " << nameVal << std::endl;
+  std::cout << "Account default constructor called!!" << std::endl;
   ++count; // updating static member count everytime a new object is created.
 }
 
 // Copy constructor implementation. (shallow).
 Account::Account(const Account &source) : name(source.name), balance(source.balance) {
-  std::cout << "Copy constructor called for: " << source.name << std::endl;
+  std::cout << "Account Copy constructor called for: " << source.name << std::endl;
   ++count; // updating static member count everytime a new object is copied.
 }
 
 Account::Account(Account &&source) noexcept {
-  std::cout << "Move constructor called for: " << source.name << std::endl;
+  std::cout << "Account Move constructor called for: " << source.name << std::endl;
   name = std::move(source.name);
-  balance = std::move(source.balance);
+  balance = source.balance;
   ++count; // updating static member count everytime a new object is moved.
 }
 
@@ -53,18 +55,28 @@ double Account::getBalance() const {
   return balance;
 }
 
-void Account::deposit(double amount) {
+void Account::setDeposit(const double amount) {
   balance += amount;
 }
 
 void Account::setName(std::string n) {
-  name = n;
+  name = std::move(n);
+}
+
+double Account::withdraw(const double amount) {
+  if (balance < amount) {
+    return -1.0;
+  }
+
+  balance -= amount;
+  return amount;
 }
 
 // COPY ASSIGNMENT OPERATOR OVERLOAD
 Account &Account::operator=(const Account &source) {
   std::cout << "Copy assignment operator called for: " << source.name << std::endl;
   if (this == &source) {
+    std::cout << "same object address: this -> " << this << " source ->" << &source << std::endl;
     return *this;
   }
 
@@ -77,7 +89,7 @@ Account &Account::operator=(const Account &source) {
 Account &Account::operator=(Account &&source) noexcept {
   std::cout << "Move assignment operator called for: " << source.name << std::endl;
   name = std::move(source.name);
-  balance = std::move(source.balance);
+  balance = source.balance;
 }
 
 

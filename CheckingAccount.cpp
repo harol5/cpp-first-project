@@ -4,18 +4,34 @@
 
 #include "CheckingAccount.h"
 
-double CheckingAccount::getBalance() {
-  return balance;
+#include <utility>
+
+CheckingAccount::CheckingAccount(std::string nameVal, const double balanceVal ,const int routingNumber, const long accountNumber)
+    : Account{std::move(nameVal), balanceVal}, routingNumber{routingNumber}, accountNumber{accountNumber} {
+    std::cout << "CheckingAccount default constructor called!!" << std::endl;
 }
 
-void CheckingAccount::deposit(double amount) {
-  balance += amount;
+CheckingAccount::CheckingAccount(const CheckingAccount &source)
+: Account {source}, routingNumber{source.routingNumber}, accountNumber{source.accountNumber} {
+    std::cout << "CheckingAccount default constructor called!!" << std::endl;
 }
 
-void CheckingAccount::setName(std::string n) {
-  name = n;
+CheckingAccount::~CheckingAccount() {
+    std::cout << "CheckingAccount destructor called." << std::endl;
 }
 
-std::string CheckingAccount::getName() {
-  return name;
+void CheckingAccount::setRoutingNumber(const int r) {
+    routingNumber = r;
+}
+
+void CheckingAccount::setAccountNumber(const long a) {
+    accountNumber = a;
+}
+
+int CheckingAccount::getRoutingNumber() const {
+    return routingNumber;
+}
+
+long CheckingAccount::getAccountNumber() const {
+    return accountNumber;
 }

@@ -1,18 +1,9 @@
 #include <iostream>
-#include <utility>
 #include <vector>
 #include <string>
-/*#include <algorithm>*/
-/*#include <cmath>*/
-/*#include <cstdlib>*/
-/*#include <cstdio>*/
-/*#include <cstring>*/
-/*#include <cctype>*/
-/*#include <ctime>*/
-/*#include <cassert>*/
-
 #include "Account.h"
 #include "Deep.h"
+#include "CheckingAccount.h"
 
 /*
  * throughout this file, we'll see the namespace "std" use a lot.
@@ -259,7 +250,7 @@ void changeBalanceAccount (Account &account) {
     cout << "account name is: " << account.getName() << endl;
     cout << "account balance is: " << account.getBalance() << endl;
     displayActiveAccounts();
-    account.deposit(account.getBalance() + 2000);
+    account.setDeposit(account.getBalance() + 2000);
     cout << "--- ----------------- done ---------------------------- ---" << endl;
 }
 
@@ -270,7 +261,7 @@ void estimateBalanceAccount (Account account) {
     cout << "account balance is: " << account.getBalance() << endl;
     displayActiveAccounts();
     double ownedFees = 200.56;
-    account.deposit(account.getBalance() - ownedFees);
+    account.setDeposit(account.getBalance() - ownedFees);
     cout << "balance is after paying fees: " <<  account.getBalance()  << endl;
     cout << "--- ----------------- done ---------------------------- ---" << endl;
 }
@@ -407,7 +398,7 @@ void assignmentOperator () {
  */
 void differentWaysOfInitialization() {
     Account account1 {"name1", 100.0};
-    Account account2 = {"name2", 200.0};
+    /*Account account2 = {"name2", 200.0};*/ // once I added the "explicit" keyword to the default constructor, I can not initialize like this.
     Account account3 = Account {"name3", 300.0};
     Account account4 ("account4", 400.0);
     Account account5 =  Account("account5", 500.0);
@@ -421,7 +412,8 @@ void understandingSTDMoveSemantics() {
     Account account1 {"name1", 100.0};
     saveAccountOnTheFly(std::move(account1));
 
-    Account account2 = {"name2", 200.0};
+    /*Account account2 = {"name2", 200.0};*/ // once I added the "explicit" keyword to the default constructor, I can not initialize like this.
+    Account account2 {"name2", 200.0};
 
     // will these 2 reference variables (Lvalue and Rvalue) point to the same memory address account2 is using? -> YES!! so what is the actual difference?
     Account &lValueRef_account2 = account2;
@@ -433,8 +425,23 @@ void understandingSTDMoveSemantics() {
 }
 
 int main() {
+    /*CheckingAccount a1 {"john",4678.46,347656783,12345678901234};*/
+    CheckingAccount a1;
+    displayActiveAccounts();
+    cout << "a1 account number is: " << a1.getAccountNumber() << endl;
+    cout << "a1 routing number is: " << a1.getRoutingNumber() << endl;
+    cout << "a1 balance is: " << a1.getBalance() << endl;
+    cout << "a1 name is: " << a1.getName() << endl;
 
+    a1.setAccountNumber(1234567891233);
+    a1.setRoutingNumber(123456789);
+    a1.setDeposit(3000.45);
+    a1.setName("juan");
 
+    cout << "a1 account number is: " << a1.getAccountNumber() << endl;
+    cout << "a1 routing number is: " << a1.getRoutingNumber() << endl;
+    cout << "a1 balance is: " << a1.getBalance() << endl;
+    cout << "a1 name is: " << a1.getName() << endl;
 
     return 0;
 }

@@ -25,14 +25,18 @@ private:
     static int count; // this belongs to the class, not objects. and will be initialized on the cpp file.
     std::string name;
     double balance;
+
+protected:
+    int test {0};
 public:
-    // default values constructor.
     /*
+     * default values constructor.
+     *
      * Constructor Initialization list.
      * for best practices when passing value to constructors see AI chat "C++ Initialization Syntax Explained in Detail"
      * "pass-by-value and move" idiom
      */
-    Account(std::string nameVal = "default", double balanceVal = 0);
+    explicit Account(std::string nameVal = "default", double balanceVal = 0);
     // Copy constructor.
     Account(const Account &source);
     // Move constructor. -> move resources on the heap. more efficient.
@@ -45,12 +49,14 @@ public:
     // MOVE ASSIGNMENT OPERATOR OVERLOAD
     Account &operator=(Account &&source) noexcept;
 
-    void deposit(double amount);
-    void setName(std::string name);
+    void setDeposit(double amount);
+    void setName(std::string n);
+
 
     // CONST CORRECTNESS
     [[nodiscard]] const std::string &getName() const;
     [[nodiscard]] double getBalance() const;
+    double withdraw(double amount);
 
     static int getCount(); // because this method is static, it only has access to static members.
 };
