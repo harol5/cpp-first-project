@@ -228,6 +228,12 @@ void displayActiveAccounts () {
     cout << "--- displayActiveAccounts called!!: active accounts: " << Account::getCount() << endl;
 }
 
+/* ==========================================
+ * c++ feature only: Function parameters types.
+ *
+ * understanding const, Lvalues and Rvalues in function parameters.
+ */
+
 /*
  * this function takes Rvalue and Lvalues;
  * argument passed by Lvalue const reference (read only)
@@ -292,6 +298,13 @@ void saveAccountOnTheFly (Account &&account) {
     cout << "--- ----------------- done ---------------------------- ---" << endl;
 }
 
+/* ==========================================
+ * c++ feature only: Classes and function parameters.
+ *
+ * Practicing function and classes.
+ *
+ * Move Copy constructors.
+ */
 void practicingClasses () {
     Person p1 {"harol", 30}; // was this created on the stack or heap? -> on the stack
     p1.printInfo();
@@ -305,12 +318,12 @@ void practicingClasses () {
     Person *p4 = new Person ("maria", 30);
     (*p4).printInfo();
 
-    Account p1Accounts {(p1.getName().data()),100.67};
+    Account p1Accounts {p1.getName(),100.67};
     displayAccountInfo(p1Accounts); // Lvalue (locator value)
     Account &r_p1Accounts = p1Accounts; // Lvalue reference
     displayAccountInfo(r_p1Accounts);
 
-    Account p2Accounts { (p2->getName().data()),200.67};
+    Account p2Accounts { p2->getName(),200.67};
     displayAccountInfo(p2Accounts); // Lvalue (locator value)
 
     Account newAccount; // initialize with default values.
@@ -468,6 +481,90 @@ void practicingInheritance () {
 
 }
 
+/* ==========================================
+ * c++ feature only: overwriting ancestor class methods.
+ *
+ * understanding the behavior when overwriting methods in classes (static vs dynamic polymorphism).
+ *
+ */
+void overwritingAncestorMethods () {
+    /*
+     * Observations:
+     *
+     * take a look at the following the object created.
+     * the first one creates an object on the heap (Account a CheckingAccount b).
+     * the second and third one on the stack (CheckingAccount c).
+     *
+     * after running this code, the object Account(a) created on the heap, did not call the overwritten setDeposit methods
+     * implemented on the CheckingAccount class, instead, the parent implementation was used. WHY??
+     * because, static polymorphism was used, meaning that the compiler bound the methods to the parent implementation because that
+     * was actually what was written in the code.
+     *
+     * this behavior is only present when you use pointers or references, and the class type that was used to create the object (left side)
+     * is a parent class.
+     *
+     * To avoid this behavior you have to add the "virtual" keyword in front of the methods, inside the parent class.
+     *
+     * the second and third object (CheckingAccount b CheckingAccount c) did actually use the overwritten method, then it called the parent implementation.
+     */
+    Account *a = new CheckingAccount {};
+    a->setDeposit(1000.0); // will use parent implementation (no virtual).
+    a->setName("john"); // will use own implementation (virtual).
+    /*a->setAccountNumber(1111111111);*/ // ERROR!! CAN ONLY ACCESS METHODS CREATED ON THE PARENT CLASS
+    cout << " ------- john balance is: " << a->getBalance() << endl;
+    delete a;
+
+    CheckingAccount *b = new CheckingAccount {};
+    b->setName("carlos");
+    b->setDeposit(1000.0);
+    b->setAccountNumber(1111111111);
+    cout << " ------- carlos balance is: " << b->getBalance() << endl;
+    delete b;
+
+    CheckingAccount c {};
+    c.setName("rufus");
+    c.setDeposit(1000.0);
+    c.setAccountNumber(2222222222);
+    cout << " ------- rufus balance is: " << c.getBalance() << endl;
+}
+
+/* ==========================================
+ * c++ feature only: returning by value, reference or pointer.
+ */
+Account modifyAndReturnCopyAccount (Account account) {
+    displayActiveAccounts();
+    account.setName(account.getName() + " modified");
+    account.setDeposit(account.getBalance() + 1000);
+    return account;
+}
+
+// I think these are more useful in the class context, because does not make sense to return a reference to a variable that
+// will go out of scope when the function returns
+Account &modifyAndReturnReferenceAccount (Account &account) {
+    displayActiveAccounts();
+    account.setName(account.getName() + " modified");
+}
+
+Account* createAccountOnTheHeap () {
+    auto *p_account = new Account {"account on the heap", 200.0};
+    return p_account;
+}
+
+void practicingReturningValues () {
+    Account account1 {"name1", 100.0};
+    displayActiveAccounts();
+
+    /*
+     * the move constructor will be used here because before the object copied to the function
+     * goes out of scope, it will move its resources to the assigned variable.
+     */
+    Account account2 = modifyAndReturnCopyAccount(account1);
+    displayActiveAccounts();
+
+    cout << "account2 balance is: " << account2.getBalance() << endl;
+}
+
 int main() {
+    overwritingAncestorMethods();
     return 0;
 }

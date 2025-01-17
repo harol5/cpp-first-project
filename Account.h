@@ -42,7 +42,7 @@ public:
     // Move constructor. -> move resources on the heap. more efficient.
     Account(Account &&source) noexcept;
     // Destructor.
-    ~Account();
+    virtual ~Account();
 
     // COPY ASSIGNMENT OPERATOR OVERLOAD
     Account &operator=(const Account &source);
@@ -50,7 +50,7 @@ public:
     Account &operator=(Account &&source) noexcept;
 
     void setDeposit(double amount);
-    void setName(std::string n);
+    virtual void setName(std::string n);
 
 
     // CONST CORRECTNESS

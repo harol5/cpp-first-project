@@ -58,10 +58,12 @@ double Account::getBalance() const {
 }
 
 void Account::setDeposit(const double amount) {
+  std::cout << "Depositing " << amount << " to " << name << std::endl;
   balance += amount;
 }
 
 void Account::setName(std::string n) {
+  std::cout << "Setting name to: " << n << std::endl;
   name = std::move(n);
 }
 

@@ -4,8 +4,6 @@
 
 #include "CheckingAccount.h"
 
-#include <utility>
-
 CheckingAccount::CheckingAccount(std::string nameVal, const double balanceVal ,const int routingNumber, const long accountNumber)
     : Account{std::move(nameVal), balanceVal}, routingNumber{routingNumber}, accountNumber{accountNumber} {
     std::cout << "CheckingAccount default constructor called!!" << std::endl;
@@ -44,4 +42,19 @@ int CheckingAccount::getRoutingNumber() const {
 
 long CheckingAccount::getAccountNumber() const {
     return accountNumber;
+}
+
+//overrides parent implementation.
+void CheckingAccount::setDeposit(double amount) {
+    std::cout << "CheckingAccount::setDeposit called." << std::endl;
+    // subtracting 5% fee for checking account deposits.
+    amount = amount - (amount * 0.05);
+    // we can call the parent implementation so it can do its part.
+    Account::setDeposit(amount);
+}
+
+void CheckingAccount::setName(std::string n) {
+    std::cout << "CheckingAccount::setName called." << std::endl;
+    n = "Checking Account: " + n;
+    Account::setName(std::move(n));
 }

@@ -14,24 +14,22 @@ private:
 
 public:
     explicit CheckingAccount(std::string nameVal = "default", double balanceVal = 0, int routingNumber = 0, long accountNumber = 0);
-
     // copy
     CheckingAccount(const CheckingAccount &source);
-
     // move
     CheckingAccount(CheckingAccount &&source) noexcept;
-
     //destructor
-    ~CheckingAccount();
+    virtual ~CheckingAccount();
 
+    // own methods.
     void setRoutingNumber(int r);
     void setAccountNumber(long a);
     [[nodiscard]] int getRoutingNumber() const;
     [[nodiscard]] long getAccountNumber() const;
-    /*double getBalance();
-    void deposit(double amount);
-    void setName(std::string n);
-    std::string getName();*/
+
+    //override
+    void setDeposit(double amount);
+    virtual void setName(std::string n) override;
 };
 
 
