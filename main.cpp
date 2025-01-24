@@ -4,6 +4,9 @@
 #include "Account.h"
 #include "Deep.h"
 #include "CheckingAccount.h"
+#include "Shape.h"
+#include "ClosedShape.h"
+#include "Circle.h"
 
 /*
  * throughout this file, we'll see the namespace "std" use a lot.
@@ -526,6 +529,10 @@ void overwritingAncestorMethods () {
     c.setDeposit(1000.0);
     c.setAccountNumber(2222222222);
     cout << " ------- rufus balance is: " << c.getBalance() << endl;
+
+    Account &r_cAccount = c;
+    r_cAccount.setDeposit(349.45);
+    cout << " ------- rufus account number is: " << r_cAccount.getBalance() << endl;
 }
 
 /* ==========================================
@@ -564,7 +571,55 @@ void practicingReturningValues () {
     cout << "account2 balance is: " << account2.getBalance() << endl;
 }
 
+/* ==========================================
+ * c++ feature only: Abstract classes and interfaces.
+ *
+ * pure virtual functions.
+ *
+ */
+void practicingAbstractClassesAndInterfaces () {
+    // these are abstract classes because they have at least one pure virtual function, or they extend a class with
+    // pure virtual functions but do not provide implementation for all of them.
+
+    /* Shape s{}; */ // ERROR!!
+    /* ClosedShape cs{}; */ // ERROR!!
+    /* Shape s2 = Circle{}; */ // ERROR!!
+
+
+    // Circle class can be instantiated because it creates implementation for all the pure virtual methods defined
+    // in the Shape and ClosedShape Abstract classes.
+    Circle circle{};
+    circle.setX(3.5);
+    circle.setY(4.5);
+    circle.setRadius(10);
+
+    Shape *p_Shape = new Circle{34.5};
+    p_Shape->setX(45.7);
+    p_Shape->setY(56.7);
+    p_Shape->draw();
+
+    ClosedShape *p_ClosedShape = new Circle{};
+    p_ClosedShape->setArea(34.78);
+    p_ClosedShape->draw();
+
+    Shape &r_Shape = circle;
+    r_Shape.draw();
+    cout << "r_Shape x is: " << r_Shape.getX() << endl;
+    cout << "r_Shape y is: " << r_Shape.getY() << endl;
+
+    ClosedShape &r_ClosedShape = circle;
+    r_ClosedShape.draw();
+    r_ClosedShape.setArea(100.0);
+    cout << "r_ClosedShape area is: " << r_ClosedShape.getArea() << endl;
+
+
+
+    delete p_Shape;
+    delete p_ClosedShape;
+}
+
 int main() {
-    overwritingAncestorMethods();
+    practicingAbstractClassesAndInterfaces();
+
     return 0;
 }
