@@ -4,6 +4,9 @@
 
 #include "Shape.h"
 
+#include <iostream>
+#include <ostream>
+
 int Shape::count = 0;
 int Shape::getCount() {
     return count;
@@ -11,6 +14,7 @@ int Shape::getCount() {
 
 Shape::Shape(const double initX , const double initY): x(initX), y(initY) {
     count++;
+    std::cout << "Shape constructor called: " << count << std::endl;
 }
 
 Shape::~Shape() {

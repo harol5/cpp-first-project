@@ -4,10 +4,14 @@
 
 #include "ClosedShape.h"
 
+#include <iostream>
+#include <ostream>
+
 int ClosedShape::count = 0;
 
-ClosedShape::ClosedShape() {
+ClosedShape::ClosedShape(): Shape() {
     count++;
+    std::cout << "ClosedShape constructor called: " << count << std::endl;
 }
 
 ClosedShape::~ClosedShape() {
@@ -16,6 +20,11 @@ ClosedShape::~ClosedShape() {
 
 int ClosedShape::getCount() {
     return count;
+}
+
+void ClosedShape::setArea(double initArea) {
+    std::cout << "ClosedShape set area" << std::endl;
+    area = initArea;
 }
 
 double ClosedShape::getArea() const {

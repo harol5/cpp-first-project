@@ -6,7 +6,6 @@
 #define CIRCLE_H
 #include "ClosedShape.h"
 
-
 class Circle: public ClosedShape {
 private:
     double radius;
@@ -18,7 +17,7 @@ public:
     virtual void erase() override;
     virtual void rotate() override;
 
-    virtual void setArea(double initArea) override;
+    virtual void setArea(double initArea);
 
     double getRadius() const;
     void setRadius(double newRadius);

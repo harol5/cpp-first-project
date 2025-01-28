@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <memory>
+
 #include "Account.h"
 #include "Deep.h"
 #include "CheckingAccount.h"
@@ -51,6 +53,9 @@ void arrays() {
     for (int i = 0; i < std::size(ages); i++) {
         std::cout << "ages at index " << i << " is: " << *(ages + i) << std::endl;
     }
+
+    int numOnes[10];
+
 }
 
 /* ==========================================
@@ -59,13 +64,13 @@ void arrays() {
 void vectorPractice () {
     // like ArrayList in java.
 
-    // vector initialization with a specific size.
+    // vector initialization with specific size.
     std::vector<char> vowels (26);
 
-    // vector initialization with a specific size and value.
+    // vector initialization with specific size and value.
     std::vector highTemperatures (365, 80.0);
 
-    // vector initialization with a specific values.
+    // vector initialization with specific values.
     std::vector<int> ages {50,34,78,21};
 
     // adds at the end of the vector.
@@ -593,15 +598,6 @@ void practicingAbstractClassesAndInterfaces () {
     circle.setY(4.5);
     circle.setRadius(10);
 
-    Shape *p_Shape = new Circle{34.5};
-    p_Shape->setX(45.7);
-    p_Shape->setY(56.7);
-    p_Shape->draw();
-
-    ClosedShape *p_ClosedShape = new Circle{};
-    p_ClosedShape->setArea(34.78);
-    p_ClosedShape->draw();
-
     Shape &r_Shape = circle;
     r_Shape.draw();
     cout << "r_Shape x is: " << r_Shape.getX() << endl;
@@ -612,6 +608,14 @@ void practicingAbstractClassesAndInterfaces () {
     r_ClosedShape.setArea(100.0);
     cout << "r_ClosedShape area is: " << r_ClosedShape.getArea() << endl;
 
+    Shape *p_Shape = new Circle{34.5};
+    p_Shape->setX(45.7);
+    p_Shape->setY(56.7);
+    p_Shape->draw();
+
+    ClosedShape *p_ClosedShape = new Circle{};
+    p_ClosedShape->setArea(34.78);
+    p_ClosedShape->draw();
 
 
     delete p_Shape;
@@ -619,7 +623,37 @@ void practicingAbstractClassesAndInterfaces () {
 }
 
 int main() {
-    practicingAbstractClassesAndInterfaces();
+    /*vector<Account> accounts {Account{"john",1000.0}};
+    accounts.push_back(Account{"jane",2000.0});
+
+    for (auto &account : accounts) {
+        displayAccountInfo(account);
+    }*/
+
+    /*
+     * Unique pointers will delete automatically.
+     * they are just a wrapper for pointers.
+     */
+
+    // this is error prompted because it creates a raw pointer (new) then transfers ownership to the unique pointer
+    std::unique_ptr<Account> accountOne {new Account{"juan",3000.0}};
+    // preferred method.
+    const auto accountTwo = std::make_unique<Account>("maria",4000.0);
+    // unique pointers cannot be copied, only moved.
+    const std::unique_ptr<Account> accountThree = std::move(accountOne);
+
+    cout << "accountTwo name is: " << accountTwo->getName() << endl;
+    cout << "accountThree name is: " << accountThree->getName() << endl;
+
+
+    vector<unique_ptr<Account>> uniqueAccounts;
+    uniqueAccounts.push_back(std::make_unique<Account>("juan",3000.0));
+    uniqueAccounts.push_back(std::make_unique<CheckingAccount>("maria",4000.0,3434786798,12345678901234));
+
+    for (const auto &account : uniqueAccounts) {
+        displayAccountInfo(*account);
+    }
+
 
     return 0;
 }

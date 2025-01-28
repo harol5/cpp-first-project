@@ -18,7 +18,7 @@ public:
     ClosedShape();
     virtual ~ClosedShape();
 
-    virtual void setArea(double initArea) = 0;
+    virtual void setArea(double initArea);
     [[nodiscard]] double getArea() const;
 
     static int getCount();

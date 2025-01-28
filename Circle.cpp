@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <ostream>
+#include <numbers>
 
 Circle::Circle(const double initRadius): radius(initRadius) {}
 
@@ -27,8 +28,8 @@ void Circle::rotate() {
 
 void Circle::setArea(double initArea) {
     std::cout << "Setting area of a circle" << std::endl;
+    ClosedShape::setArea(std::numbers::pi * radius * radius);
 }
-
 
 double Circle::getRadius() const {
     return radius;

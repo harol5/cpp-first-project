@@ -5,7 +5,11 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 
-
+/*
+ * This is an abstract class.
+ *
+ * it has concrete methods, fields.
+ */
 class Shape {
 private:
     static int count;
