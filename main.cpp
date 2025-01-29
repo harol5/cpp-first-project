@@ -54,8 +54,25 @@ void arrays() {
         std::cout << "ages at index " << i << " is: " << *(ages + i) << std::endl;
     }
 
-    int numOnes[10];
+    int building[10][5][20];
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 5; j++) {
+            for (int k = 0; k < 20; k++) {
+                int valueJ = 2;
+                int valueI = 1;
+                int valueK = 3;
+                *(*(*(building + i) + j) + k) = valueI * valueJ * valueK;
+                std::cout << "building at index " << i << " " << j << " " << k << " is: " << building[i][j][k] << std::endl;
+            }
+        }
+    }
 
+
+    Account accounts[10]; // this initializes all the 10 Account objects calling the default constructor.
+    for (int i = 0; i < 10; i++) {
+        accounts[i] = Account{std::to_string(i), 100.0};
+        std::cout << "accounts at index " << i << " is: " << accounts[i].getName() << std::endl;
+    }
 }
 
 /* ==========================================
@@ -78,6 +95,8 @@ void vectorPractice () {
 
     // this is how you create 2d vectors.
     vector<vector<int>> matrix (3, vector<int> (3));
+
+    vector<Account> accounts (10, Account{});
 }
 
 /* ==========================================
@@ -622,14 +641,13 @@ void practicingAbstractClassesAndInterfaces () {
     delete p_ClosedShape;
 }
 
-int main() {
-    /*vector<Account> accounts {Account{"john",1000.0}};
-    accounts.push_back(Account{"jane",2000.0});
-
-    for (auto &account : accounts) {
-        displayAccountInfo(account);
-    }*/
-
+/* ==========================================
+ * c++ feature only: Smart pointers.
+ *
+ * understanding how to use unique and shared smart pointers.
+ *
+ */
+void practicingUniquePointers() {
     /*
      * Unique pointers will delete automatically.
      * they are just a wrapper for pointers.
@@ -645,6 +663,9 @@ int main() {
     cout << "accountTwo name is: " << accountTwo->getName() << endl;
     cout << "accountThree name is: " << accountThree->getName() << endl;
 
+    Account *p = accountTwo.get();
+    cout << "address of accountOne: " << p << endl;
+
 
     vector<unique_ptr<Account>> uniqueAccounts;
     uniqueAccounts.push_back(std::make_unique<Account>("juan",3000.0));
@@ -653,7 +674,16 @@ int main() {
     for (const auto &account : uniqueAccounts) {
         displayAccountInfo(*account);
     }
+}
 
+int main() {
+    /*vector<Account> accounts {Account{"john",1000.0}};
+    accounts.push_back(Account{"jane",2000.0});
 
+    for (auto &account : accounts) {
+        displayAccountInfo(account);
+    }*/
+
+    practicingUniquePointers();
     return 0;
 }

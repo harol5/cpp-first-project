@@ -94,6 +94,7 @@ Account &Account::operator=(Account &&source) noexcept {
   std::cout << "Move assignment operator called for: " << source.name << std::endl;
   name = std::move(source.name);
   balance = source.balance;
+  return *this;
 }
 
 
